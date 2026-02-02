@@ -73,6 +73,14 @@ All API endpoints under `/api/trips` are protected with **Bearer token authentic
    API_TOKEN=dev_token_replace_in_production_d4e5f6a7b8c9
    ```
 
+4. **Web UI credentials**: Configure a strong username, password, and session secret for the web UI:
+   ```bash
+   WEB_USERNAME=your-username
+   WEB_PASSWORD=your-password
+   SESSION_SECRET=your-session-secret-here
+   ```
+   The server will refuse to start if these values are missing.
+
 ### Usage
 
 Include the token in the `Authorization` header with Bearer scheme for all API requests:
@@ -121,6 +129,7 @@ These endpoints do **not** require authentication:
 - **Use strong tokens** in production (32+ random characters)
 - **Rotate tokens** periodically
 - **Use HTTPS** when exposing via ngrok or public URLs
+- **Replace placeholder values** in `.env` before exposing the server publicly
 - The `.env.example` file contains a placeholder - replace it in your `.env`
 
 ## API Endpoints

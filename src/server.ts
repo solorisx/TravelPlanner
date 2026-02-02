@@ -13,6 +13,34 @@ dotenv.config();
 
 // TODO: Multi-user extension point - Add authentication middleware configuration here
 
+const requiredEnvVars = ['API_TOKEN', 'SESSION_SECRET', 'WEB_USERNAME', 'WEB_PASSWORD'] as const;
+const missingEnvVars = requiredEnvVars.filter((name) => !process.env[name]);
+
+if (missingEnvVars.length > 0) {
+  console.error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+  console.error('Create a .env file based on .env.example before starting the server.');
+  process.exit(1);
+}
+
+const insecureDefaults = new Set([
+  'your-secure-token-here',
+  'dev_token_replace_in_production_d4e5f6a7b8c9',
+  'your-session-secret-here',
+  'your-username',
+  'your-password'
+]);
+const insecureEnvVars = requiredEnvVars.filter((name) => {
+  const value = process.env[name];
+  return value ? insecureDefaults.has(value) : false;
+});
+
+if (insecureEnvVars.length > 0) {
+  console.warn(
+    `Insecure placeholder values detected for: ${insecureEnvVars.join(', ')}. ` +
+      'Replace them with strong, unique values before exposing the server publicly.'
+  );
+}
+
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
@@ -25,7 +53,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Session middleware for web UI authentication
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'dev_session_secret_replace_in_production_xyz',
+  secret: process.env.SESSION_SECRET as string,
   resave: false,
   saveUninitialized: false,
   cookie: {
