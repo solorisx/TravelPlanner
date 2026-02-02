@@ -1,0 +1,64 @@
+<div class="stop <%= stop.category || '' %>">
+  <div class="stop-header">
+    <span class="stop-name"><%= stop.place.name %></span>
+    <% if (stop.category) { %>
+      <span class="stop-category"><%= stop.category %></span>
+    <% } %>
+  </div>
+
+  <% if (stop.imageUrl || stop.place.imageUrl) { %>
+    <div class="stop-image-container">
+      <img
+        src="<%= stop.imageUrl || stop.place.imageUrl %>"
+        alt="<%= stop.place.name %>"
+        class="stop-image"
+        loading="lazy"
+      />
+    </div>
+  <% } %>
+
+  <% if (stop.place.address) { %>
+    <div class="stop-details"><%= stop.place.address %></div>
+  <% } %>
+
+  <div class="stop-details">
+    <% if (stop.durationMinutes) { %>
+      Duration: <%= stop.durationMinutes %> min
+    <% } %>
+    <% if (stop.costLevel) { %>
+      <span class="cost-level">
+        <%= '$'.repeat(stop.costLevel) %>
+      </span>
+    <% } %>
+  </div>
+
+  <% if (stop.booking && (stop.booking.url || stop.booking.confirmation)) { %>
+    <div class="booking">
+      <% if (stop.booking.url) { %>
+        <a href="<%= stop.booking.url %>" target="_blank">Booking Link</a>
+      <% } %>
+      <% if (stop.booking.confirmation) { %>
+        <span>Confirmation: <%= stop.booking.confirmation %></span>
+      <% } %>
+    </div>
+  <% } %>
+
+  <% if (stop.notes) { %>
+    <div class="notes"><%= stop.notes %></div>
+  <% } %>
+
+  <% if (stop.externalLinks && stop.externalLinks.length > 0) { %>
+    <div class="external-links">
+      <strong>Related Links:</strong>
+      <ul class="link-list">
+        <% stop.externalLinks.forEach(link => { %>
+          <li>
+            <a href="<%= link.url %>" target="_blank" rel="noopener noreferrer">
+              <%= link.title %> ↗
+            </a>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+  <% } %>
+</div>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API Test Page</title>
+  <style>
+    #rendered {
+      border: 1px solid #ddd;
+      padding: 12px;
+      margin-top: 12px;
+      min-height: 60px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    pre {
+      background: #f7f7f7;
+      padding: 12px;
+      border: 1px solid #ddd;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Travel Plan API Test</h1>
+  
+  <div>
+    <label>API Token:</label>
+    <input type="text" id="token" value="xxxxx" size="50">
+  </div>
+  
+  <div style="margin-top: 10px;">
+    <button onclick="listTrips()">List Trips</button>
+    <button onclick="getTrip()">Get Trip</button>
+    <button onclick="renderTrip()">Render Trip</button>
+  </div>
+  
+  <h3>JSON Output</h3>
+  <pre id="output"></pre>
+
+  <h3>Rendered HTML</h3>
+  <div id="rendered"></div>
+
+  <script>
+    function getToken() {
+      return document.getElementById('token').value;
+    }
+
+    function showJson(data) {
+      document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+      document.getElementById('rendered').innerHTML = "";
+    }
+
+    function showHtml(html) {
+      document.getElementById('rendered').innerHTML = html;
+      document.getElementById('output').textContent = "";
+    }
+
+    async function listTrips() {
+      const response = await fetch('http://localhost:3000/api/trips', {
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+      });
+      const data = await response.json();
+      showJson(data);
+    }
+
+    async function getTrip() {
+      const id = prompt('Enter trip ID:', '550e8400-e29b-41d4-a716-446655440000');
+      if (!id) return;
+
+      const response = await fetch(`http://localhost:3000/api/trips/${id}`, {
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+      });
+      const data = await response.json();
+      showJson(data);
+    }
+
+    async function renderTrip() {
+      const id = prompt('Enter trip ID to render:', '550e8400-e29b-41d4-a716-446655440000');
+      if (!id) return;
+
+      const response = await fetch(`http://localhost:3000/api/trips/${id}/render`, {
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+      });
+
+      const html = await response.text();
+      showHtml(html);
+    }
+  </script>
+</body>
+</html>
