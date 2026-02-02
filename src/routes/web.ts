@@ -27,8 +27,14 @@ router.get('/login', (req: Request, res: Response) => {
 router.post('/login', (req: Request, res: Response) => {
   const { username, password } = req.body;
 
-  const validUsername = process.env.WEB_USERNAME || 'admin';
-  const validPassword = process.env.WEB_PASSWORD || 'admin123';
+  const validUsername = process.env.WEB_USERNAME;
+  const validPassword = process.env.WEB_PASSWORD;
+
+  if (!validUsername || !validPassword) {
+    console.error('WEB_USERNAME or WEB_PASSWORD environment variable not set');
+    res.status(500).send('Web authentication not configured');
+    return;
+  }
 
   if (username === validUsername && password === validPassword) {
     // Set session
